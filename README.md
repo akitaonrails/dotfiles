@@ -505,3 +505,7 @@ Yadr is made possible by many awesome people, too many to list :) But here are a
 
 Follow my blog: http://yanpritzker.com
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/akitaonrails/dotfiles/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
