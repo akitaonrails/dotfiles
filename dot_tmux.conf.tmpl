@@ -1,0 +1,133 @@
+#set -g prefix C-Space
+{{- if eq .tools.clipboard "wl-copy" }}
+set -s copy-command "wl-copy"
+{{- else }}
+set -s copy-command "xsel -i -b"
+{{- end }}
+set -g mouse on
+set -g base-index 1
+set -g history-limit 100000
+unbind r
+bind r source-file ~/.tmux.conf \; display-message "Reloaded!"
+
+# Make a smaller delay so we can perform commands after switching windows
+set -sg escape-time 0
+set -sg repeat-time 600
+
+# Rather than constraining window size to the maximum size of any client 
+# connected to the *session*, constrain window size to the maximum size of any 
+# client connected to *that window*.
+setw -g aggressive-resize on
+
+# neovim integration
+set -g -a terminal-overrides ',*:Ss=\E[%p1%d q:Se=\E[2 q'
+
+bind C-l send-keys 'C-l' # new clear screen
+
+# panes 
+set-window-option -g pane-base-index 1
+bind v split-window -h -c "#{pane_current_path}"
+bind h split-window -v -c "#{pane_current_path}"
+
+# windows
+unbind n # DEFAULT KEY: next window
+unbind w # DEFAULT KEY: change current window
+bind n command-prompt "rename-window '%%'"
+bind w new-window -c "#{pane_current_path}"
+bind -n M-j previous-window
+bind -n M-k next-window
+
+# copy mode
+set-window-option -g mode-keys vi
+unbind -T copy-mode-vi Space; # default for begin copy
+unbind -T copy-mode-vi Enter; # default for copy selection
+bind -T copy-mode-vi v send -X begin-selection
+
+{{- if eq .tools.clipboard "wl-copy" }}"}}
+bind -T copy-mode-vi y send -X copy-selection-and-cancel "wl-copy"
+{{- else }}
+bind -T copy-mode-vi y send -X copy-selection-and-cancel "xsel --clipboard"
+{{- end }}
+
+# open my general notes
+bind -n C-M-n split-window -h "lvim -c 'cd {{ .tmux.notesDir }}' {{ .tmux.notesDir }}/{{ .tmux.notesFile }}"
+
+##############
+### DESIGN ###
+##############
+
+# panes
+set -g pane-border-style fg=black
+set -g pane-active-border-style fg=red
+
+## Status bar design
+# status line
+set -g status-justify left
+#set -g status-bg default
+set -g status-style fg=blue
+set -g status-interval 2
+
+# messaging
+set -g message-command-style fg=blue,bg=black
+
+# window mode
+setw -g mode-style bg=green,fg=black
+
+# window status
+setw -g window-status-format " #F#I:#W#F "
+setw -g window-status-current-format " #F#I:#W#F "
+setw -g window-status-format "#[fg=magenta]#[bg=black] #I #[bg=cyan]#[fg=white] #W "
+setw -g window-status-current-format "#[bg=brightmagenta]#[fg=white] #I #[fg=white]#[bg=cyan] #W "
+setw -g window-status-current-style bg=black,fg=yellow,dim
+setw -g window-status-style bg=green,fg=black,reverse
+
+# loud or quiet?
+set -g visual-activity off
+set -g visual-bell off
+set -g visual-silence off
+set-window-option -g monitor-activity off
+set -g bell-action none
+
+# The modes 
+set-window-option -g clock-mode-colour red
+set-window-option -g mode-style fg=red,bg=black,bold
+
+# The panes 
+set -g pane-border-style bg=black,fg=black
+set -g pane-active-border-style fg=blue,bg=black
+
+# The statusbar 
+set -g status-position bottom
+set -g status-style bg=black,fg=yellow,dim
+set -g status-left ''
+set -g status-right '#{?client_prefix,#[fg=white]#[bg=red]#[bold] - PREFIX - ,#[fg=brightwhite]#H}'
+
+set -g status-right-length 50
+set -g status-left-length 20
+
+# The window
+set-window-option -g window-status-current-style fg=red,bg=black,bold
+set-window-option -g window-status-current-format ' #I#[fg=brightwhite]:#[fg=brightwhite]#W '
+
+set-window-option -g window-status-style fg=magenta,bg=black,none
+set-window-option -g window-status-format ' #I#[fg=brightblack]:#[fg=brightblack]#W#[fg=black]#F '
+
+set-window-option -g window-status-bell-style fg=white,bg=red,bold
+
+# The messages 
+set -g message-style fg=white,bg=red,bold
+
+###############
+### PLUGINS ###
+###############
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-copycat'
+set -g @plugin 'laktak/extrakto'
+set -g @plugin 'junegunn/tmux-fzf-url'
+set -g @plugin 'christoomey/vim-tmux-navigator'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+# To install: PREFIX+SHIFT+i
+run -b "$HOME/.tmux/plugins/tpm/tpm"

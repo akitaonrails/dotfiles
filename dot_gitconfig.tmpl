@@ -1,0 +1,32 @@
+[user]
+	email = {{ .user.git.email }}
+	name = {{ .user.git.name }}
+[safe]
+	directory = /opt/flutter
+[alias]
+  a = add
+  ai = add -i
+  ap = add -p
+  br = branch
+  c = commit -m
+  cl = clone
+  clean = !git reset --hard && git clean -df
+  co = checkout
+  cob = checkout -b
+  done = !git push --follow-tags origin HEAD
+  fix = commit --amend -m
+  ft = fetch
+  l = log
+  la = !"git config -l | grep alias | cut -c 7-"
+  pl = pull
+  ps = push
+  psf = push --force-with-lease
+  rm = branch -D
+  s = status
+  undo = reset HEAD~1 --mixed
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

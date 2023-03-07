@@ -1,0 +1,33 @@
+# Use powerline
+USE_POWERLINE="true"
+# Source {{ .chezmoi.osRelease.id }}-zsh-configuration
+if [[ -e /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-config ]]; then
+  source /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-config
+fi
+# Use {{ .chezmoi.osRelease.id }} zsh prompt
+if [[ -e /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-prompt ]]; then
+  source /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-prompt
+fi
+
+alias monhd="sudo ddcutil -d 1 setvcp 60 0x12"
+alias mondp="sudo ddcutil -d 1 setvcp 60 0x0F"
+alias ls="exa --icons --git"
+
+export PATH=~/.npm-global/bin:$USER/.local/bin:/opt/flutter/bin:$(go env GOBIN):$(go env GOPATH)/bin:$HOME/.cargo/bin:$PATH
+#export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
+export JAVA_HOME='/usr/lib/jvm/java-11-openjdk'
+export ANDROID_SDK_ROOT='{{ .chezmoi.homeDir }}/Android/Sdk'
+export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools/
+export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin/
+export PATH=$PATH:$ANDROID_ROOT/emulator
+export PATH=$PATH:$ANDROID_SDK_ROOT/tools/
+export CHROME_EXECUTABLE=/usr/bin/microsoft-edge-stable
+export OPENAI_API_KEY="{{ .openai.secretKey }}"
+
+source $HOME/.config/zsh/zsh-histdb/sqlite-history.zsh
+autoload -Uz add-zsh-hook
+
+. /opt/asdf-vm/asdf.sh
+
+neofetch
+

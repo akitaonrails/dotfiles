@@ -1,0 +1,16 @@
+{{- $name      := promptStringOnce . "user.git.name" "Name used in GitHub" -}}
+{{- $email     := promptStringOnce . "user.git.email" "Email used in GitHub" -}}
+{{- $notesDir  := promptStringOnce . "tmux.notesDir" "Full Directory path to Notes" -}}
+{{- $notesFile := promptStringOnce . "tmux.notesFile" "Notes filename" -}}
+{{- $clip      := promptStringOnce . "tools.clipboard" "xsel (XOrg)/wl-copy (Wayland)" -}}
+{{- $secretKey := promptStringOnce . "openai.secretKey" "Your OpenAI Key (optional)" -}}
+[data.user.git]
+name = {{ $name | quote }}
+email = {{ $email | quote }}
+[data.tmux]
+notesDir = {{ $notesDir | quote }}
+notesFile = {{ $notesFile | quote }}
+[data.tools]
+clipboard = {{ $clip | quote }}
+[data.openai]
+secretKey = {{ $secretKey | quote }}
