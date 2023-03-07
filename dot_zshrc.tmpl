@@ -10,7 +10,9 @@ fi
 #fi
 
 eval "$(starship init zsh)"
-alias ls='exa --icons --git'
+eval "$(atuin init zsh)
+"alias ls='exa --icons --git'
+
 export PATH=~/.npm-global/bin:$USER/.local/bin:/opt/flutter/bin:$(go env GOBIN):$(go env GOPATH)/bin:$HOME/.cargo/bin:$PATH
 #export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
 export JAVA_HOME='/usr/lib/jvm/java-11-openjdk'
@@ -20,6 +22,7 @@ export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin/
 export PATH=$PATH:$ANDROID_ROOT/emulator
 export PATH=$PATH:$ANDROID_SDK_ROOT/tools/
 export OPENAI_API_KEY="{{ .openai.secretKey }}"
+export EDITOR="lvim"
 if [ -d /opt/microsoft/msedge ]; then
   export CHROME_EXECUTABLE=/opt/microsoft/msedge/msedge;
 else
