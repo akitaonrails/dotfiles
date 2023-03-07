@@ -1,14 +1,15 @@
-# Use powerline
-USE_POWERLINE="true"
+# Commenting out the Distro's default prompt
+USE_POWERLINE="false"
 # Source {{ .chezmoi.osRelease.id }}-zsh-configuration
 if [[ -e /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-config ]]; then
   source /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-config
 fi
 # Use {{ .chezmoi.osRelease.id }} zsh prompt
-if [[ -e /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-prompt ]]; then
-  source /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-prompt
-fi
+#if [[ -e /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-prompt ]]; then
+#  source /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-prompt
+#fi
 
+eval "$(starship init zsh)"
 alias ls='exa --icons --git'
 export PATH=~/.npm-global/bin:$USER/.local/bin:/opt/flutter/bin:$(go env GOBIN):$(go env GOPATH)/bin:$HOME/.cargo/bin:$PATH
 #export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
@@ -19,9 +20,10 @@ export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin/
 export PATH=$PATH:$ANDROID_ROOT/emulator
 export PATH=$PATH:$ANDROID_SDK_ROOT/tools/
 export OPENAI_API_KEY="{{ .openai.secretKey }}"
-export CHROME_EXECUTABLE=/usr/sbin/chromium
 if [ -d /opt/microsoft/msedge ]; then
-  export CHROME_EXECUTABLE=/opt/microsoft/msedge/msedge
+  export CHROME_EXECUTABLE=/opt/microsoft/msedge/msedge;
+else
+  export CHROME_EXECUTABLE=/usr/sbin/chromium;
 fi
 
 . /opt/asdf-vm/asdf.sh
