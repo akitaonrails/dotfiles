@@ -1,4 +1,8 @@
 #set -g prefix C-Space
+# use 256 xterm for pretty colors. This enables same colors from iTerm2 within tmux.
+# This is recommended in neovim :healthcheck
+set -g default-terminal "screen-256color"
+set -ga terminal-overrides ",xterm-256color:Tc"
 {{- if eq .tools.clipboard "wl-copy" }}
 set -s copy-command "wl-copy"
 {{- else }}
@@ -14,6 +18,13 @@ bind r source-file ~/.tmux.conf \; display-message "Reloaded!"
 set -sg escape-time 0
 set -sg repeat-time 600
 
+# highlight window when it has new activity
+setw -g monitor-activity on
+set -g visual-activity on
+
+# re-number windows when one is closed
+set -g renumber-windows on
+
 # Rather than constraining window size to the maximum size of any client 
 # connected to the *session*, constrain window size to the maximum size of any 
 # client connected to *that window*.
@@ -26,7 +37,9 @@ bind C-l send-keys 'C-l' # new clear screen
 
 # panes 
 set-window-option -g pane-base-index 1
+unbind %
 bind v split-window -h -c "#{pane_current_path}"
+unbind '"'
 bind h split-window -v -c "#{pane_current_path}"
 
 # windows
@@ -43,14 +56,49 @@ unbind -T copy-mode-vi Space; # default for begin copy
 unbind -T copy-mode-vi Enter; # default for copy selection
 bind -T copy-mode-vi v send -X begin-selection
 
-{{- if eq .tools.clipboard "wl-copy" }}"}}
-bind -T copy-mode-vi y send -X copy-selection-and-cancel "wl-copy"
-{{- else }}
-bind -T copy-mode-vi y send -X copy-selection-and-cancel "xsel --clipboard"
+{{- $copy := "xsel --clipboard" }}
+{{- $paste := "xsel -b"}}
+{{- if eq .tools.clipboard "wl-copy" }}
+  {{- $copy = "wl-copy" }}
+  {{- $paste = "wl-paste"}}
 {{- end }}
+bind -T copy-mode-vi y send -X copy-selection-and-cancel "{{ $copy }}"
+bind C-S-c run 'tmux save-buffer - | {{ $copy }}'
+bind C-S-v run 'tmux set-buffer "{{ $paste }}"; tmux paste-buffer
+
+# enable pbcopy and pbpaste
+# https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard/blob/master/README.md
+# bind p paste-buffer
+# set-option -g default-command "reattach-to-user-namespace -l zsh"
+
+# paste from system clipboard MacOS
+# bind C-v run \"tmux set-buffer \"$(reattach-to-user-namespace pbpaste)\"; tmux paste-buffer"
 
 # open my general notes
 bind -n C-M-n split-window -h "lvim -c 'cd {{ .tmux.notesDir }}' {{ .tmux.notesDir }}/{{ .tmux.notesFile }}"
+
+############################
+## Status Bar
+############################
+
+# enable UTF-8 support in status bar
+set -gq status-utf8 on
+
+# set refresh interval for status bar
+set -g status-interval 30
+
+# center the status bar
+set -g status-justify centre
+
+# show session, window, pane in left status bar
+set -g status-left-length 40
+set -g status-left '#[fg=green] #S #[fg=yellow]#I/#[fg=cyan]#P '
+
+# show hostname, date, tim 100
+set -g status-right '#(battery -t) #[fg=cyan] %d %b %R '
+
+# update status bar info
+set -g status-interval 60
 
 ##############
 ### DESIGN ###
@@ -123,9 +171,30 @@ set -g message-style fg=white,bg=red,bold
 
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-copycat'
+set -g @plugin 'tmux-plugins/tmux-copycat'
+set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'laktak/extrakto'
 set -g @plugin 'junegunn/tmux-fzf-url'
+# Add more plugins below this line
+# Plugin to save and restore tmux sessions after restart
+# * Save with: prefix + Ctrl-s
+# * Restore with: prefix + Ctlr-r
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+  # restore vim and nvim sessions as well
+  # for vim
+  set -g @resurrect-strategy-vim 'session'
+  # for neovim
+  set -g @resurrect-strategy-nvim 'session'
+
+# I think continuous save and auto restore can 
+# be annoying, enable here if you want it
+#set -g @plugin 'tmux-plugins/tmux-continuum'
+#  # Automatic restore
+#  set -g @continuum-restore 'on'
+
+# Integration with Vim for panel navigation
 set -g @plugin 'christoomey/vim-tmux-navigator'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)

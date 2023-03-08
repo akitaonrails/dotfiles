@@ -10,8 +10,15 @@ fi
 #fi
 
 eval "$(starship init zsh)"
-eval "$(atuin init zsh)
-"alias ls='exa --icons --git'
+
+export ATUIN_NOBIND="true"
+eval "$(atuin init zsh)"
+bindkey '^r' _atuin_search_widget
+
+alias ls='exa --icons --git'
+alias dk='docker'
+alias docker='podman' # remove this is you don't want to obfuscate docker with podman
+alias dx='distrobox'
 
 export PATH=~/.npm-global/bin:$USER/.local/bin:/opt/flutter/bin:$(go env GOBIN):$(go env GOPATH)/bin:$HOME/.cargo/bin:$PATH
 #export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
