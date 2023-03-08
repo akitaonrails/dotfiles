@@ -64,7 +64,7 @@ bind -T copy-mode-vi v send -X begin-selection
 {{- end }}
 bind -T copy-mode-vi y send -X copy-selection-and-cancel "{{ $copy }}"
 bind C-S-c run 'tmux save-buffer - | {{ $copy }}'
-bind C-S-v run 'tmux set-buffer "{{ $paste }}"; tmux paste-buffer
+bind C-S-v run 'tmux set-buffer "{{ $paste }}"; tmux paste-buffer'
 
 # enable pbcopy and pbpaste
 # https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard/blob/master/README.md

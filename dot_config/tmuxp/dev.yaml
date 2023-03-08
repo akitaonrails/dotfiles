@@ -1,0 +1,13 @@
+session_name: generic-dev
+windows:
+  - window_name: dev window
+    # this is from `tmux list-windows`
+    layout: 34ec,195x52,0,0{104x52,0,0,21,90x52,105,0[90x26,105,0,22,90x25,105,27,23]}
+    panes:
+      - focus: true
+        shell_command:
+        - lvim
+      - shell_command:
+        - "[ -f docker-compose.yml ] && podman-compose up"
+      - shell_command:
+        - htop
