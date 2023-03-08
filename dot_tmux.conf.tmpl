@@ -11,11 +11,6 @@ set -s copy-command "xsel -i -b"
 set -g mouse on
 set -g base-index 1
 set -g history-limit 100000
-unbind r
-bind r source-file ~/.tmux.conf \; display-message "Reloaded!"
-
-# Make a smaller delay so we can perform commands after switching windows
-set -sg escape-time 0
 set -sg repeat-time 600
 
 # highlight window when it has new activity
@@ -25,15 +20,8 @@ set -g visual-activity on
 # re-number windows when one is closed
 set -g renumber-windows on
 
-# Rather than constraining window size to the maximum size of any client 
-# connected to the *session*, constrain window size to the maximum size of any 
-# client connected to *that window*.
-setw -g aggressive-resize on
-
 # neovim integration
 set -g -a terminal-overrides ',*:Ss=\E[%p1%d q:Se=\E[2 q'
-
-bind C-l send-keys 'C-l' # new clear screen
 
 # panes 
 set-window-option -g pane-base-index 1
@@ -66,104 +54,15 @@ bind -T copy-mode-vi y send -X copy-selection-and-cancel "{{ $copy }}"
 bind C-S-c run 'tmux save-buffer - | {{ $copy }}'
 bind C-S-v run 'tmux set-buffer "{{ $paste }}"; tmux paste-buffer'
 
-# enable pbcopy and pbpaste
-# https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard/blob/master/README.md
-# bind p paste-buffer
-# set-option -g default-command "reattach-to-user-namespace -l zsh"
+# new clear screen
+bind C-l send-keys 'C-l'
 
-# paste from system clipboard MacOS
-# bind C-v run \"tmux set-buffer \"$(reattach-to-user-namespace pbpaste)\"; tmux paste-buffer"
+# reload configuration
+unbind r
+bind r source-file ~/.tmux.conf \; display-message "Reloaded!"
 
 # open my general notes
 bind -n C-M-n split-window -h "lvim -c 'cd {{ .tmux.notesDir }}' {{ .tmux.notesDir }}/{{ .tmux.notesFile }}"
-
-############################
-## Status Bar
-############################
-
-# enable UTF-8 support in status bar
-set -gq status-utf8 on
-
-# set refresh interval for status bar
-set -g status-interval 30
-
-# center the status bar
-set -g status-justify centre
-
-# show session, window, pane in left status bar
-set -g status-left-length 40
-set -g status-left '#[fg=green] #S #[fg=yellow]#I/#[fg=cyan]#P '
-
-# show hostname, date, tim 100
-set -g status-right '#(battery -t) #[fg=cyan] %d %b %R '
-
-# update status bar info
-set -g status-interval 60
-
-##############
-### DESIGN ###
-##############
-
-# panes
-set -g pane-border-style fg=black
-set -g pane-active-border-style fg=red
-
-## Status bar design
-# status line
-set -g status-justify left
-#set -g status-bg default
-set -g status-style fg=blue
-set -g status-interval 2
-
-# messaging
-set -g message-command-style fg=blue,bg=black
-
-# window mode
-setw -g mode-style bg=green,fg=black
-
-# window status
-setw -g window-status-format " #F#I:#W#F "
-setw -g window-status-current-format " #F#I:#W#F "
-setw -g window-status-format "#[fg=magenta]#[bg=black] #I #[bg=cyan]#[fg=white] #W "
-setw -g window-status-current-format "#[bg=brightmagenta]#[fg=white] #I #[fg=white]#[bg=cyan] #W "
-setw -g window-status-current-style bg=black,fg=yellow,dim
-setw -g window-status-style bg=green,fg=black,reverse
-
-# loud or quiet?
-set -g visual-activity off
-set -g visual-bell off
-set -g visual-silence off
-set-window-option -g monitor-activity off
-set -g bell-action none
-
-# The modes 
-set-window-option -g clock-mode-colour red
-set-window-option -g mode-style fg=red,bg=black,bold
-
-# The panes 
-set -g pane-border-style bg=black,fg=black
-set -g pane-active-border-style fg=blue,bg=black
-
-# The statusbar 
-set -g status-position bottom
-set -g status-style bg=black,fg=yellow,dim
-set -g status-left ''
-set -g status-right '#{?client_prefix,#[fg=white]#[bg=red]#[bold] - PREFIX - ,#[fg=brightwhite]#H}'
-
-set -g status-right-length 50
-set -g status-left-length 20
-
-# The window
-set-window-option -g window-status-current-style fg=red,bg=black,bold
-set-window-option -g window-status-current-format ' #I#[fg=brightwhite]:#[fg=brightwhite]#W '
-
-set-window-option -g window-status-style fg=magenta,bg=black,none
-set-window-option -g window-status-format ' #I#[fg=brightblack]:#[fg=brightblack]#W#[fg=black]#F '
-
-set-window-option -g window-status-bell-style fg=white,bg=red,bold
-
-# The messages 
-set -g message-style fg=white,bg=red,bold
 
 ###############
 ### PLUGINS ###
@@ -172,11 +71,14 @@ set -g message-style fg=white,bg=red,bold
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
-set -g @plugin 'tmux-plugins/tmux-copycat'
+set -g @plugin 'tmux-plugins/tmux-cowboy'
 set -g @plugin 'tmux-plugins/tmux-copycat'
 set -g @plugin 'tmux-plugins/tmux-open'
+set -g @plugin 'tmux-plugins/tmux-urlview'
 set -g @plugin 'laktak/extrakto'
-set -g @plugin 'junegunn/tmux-fzf-url'
+#set -g @plugin "janoamaral/tokyo-night-tmux"
+set -g @plugin "arcticicestudio/nord-tmux"
+
 # Add more plugins below this line
 # Plugin to save and restore tmux sessions after restart
 # * Save with: prefix + Ctrl-s
