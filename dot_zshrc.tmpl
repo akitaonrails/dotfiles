@@ -15,21 +15,26 @@ export ATUIN_NOBIND="true"
 eval "$(atuin init zsh)"
 bindkey '^r' _atuin_search_widget
 
-alias ls='exa --icons --git'
+alias cz='chezmoi'
 alias dk='docker'
 alias docker='podman' # remove this is you don't want to obfuscate docker with podman
 alias dx='distrobox'
+alias ls='exa --icons --git'
+alias zl='zellij'
 
-export PATH=~/.npm-global/bin:$USER/.local/bin:/opt/flutter/bin:$(go env GOBIN):$(go env GOPATH)/bin:$HOME/.cargo/bin:$PATH
+export PATH=$PATH:$HOME/.npm-global/bin:$USER/.local/bin:$(go env GOBIN):$(go env GOPATH)/bin:$HOME/.cargo/bin
+export OPENAI_API_KEY="{{ .openai.secretKey }}";
+export EDITOR="lvim";
 #export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
 export JAVA_HOME='/usr/lib/jvm/java-11-openjdk'
 export ANDROID_SDK_ROOT='{{ .chezmoi.homeDir }}/Android/Sdk'
-export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools/
-export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin/
-export PATH=$PATH:$ANDROID_ROOT/emulator
-export PATH=$PATH:$ANDROID_SDK_ROOT/tools/
-export OPENAI_API_KEY="{{ .openai.secretKey }}"
-export EDITOR="lvim"
+if [ -d $ANDROID_SDK_ROOT ]; then
+  export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools/;
+  export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin/;
+  export PATH=$PATH:$ANDROID_ROOT/emulator;
+  export PATH=$PATH:$ANDROID_SDK_ROOT/tools/;
+  export PATH=$PATH:/opt/flutter/bin;
+fi
 if [ -d /opt/microsoft/msedge ]; then
   export CHROME_EXECUTABLE=/opt/microsoft/msedge/msedge;
 else
