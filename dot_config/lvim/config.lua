@@ -173,45 +173,26 @@ lvim.builtin.treesitter.highlight.enable = true
 --     },
 -- }
 lvim.plugins = {
-  { "zbirenbaum/copilot.lua",
-    event = { "VimEnter" },
-    config = function()
-      vim.defer_fn(function()
-        require("copilot").setup {
-            plugin_manager_path = get_runtime_dir() .. "/site/pack/packer",
-            panel = { auto_refresh = true }, 
-            suggestion = { auto_trigger = true },
-        }
-      end, 100)
-    end,
-  },
-  { "zbirenbaum/copilot-cmp",
-    after = { "copilot.lua", "nvim-cmp" },
-  },
   { "machakann/vim-sandwich" },
   { "christoomey/vim-tmux-navigator" },
-  { "jackMort/ChatGPT.nvim", 
-    event = { "VimEnter" },
-    requires = {
-      "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim"
-    },
-    config = function()
-      vim.defer_fn(function()
-        if(vim.env.OPENAI_API_KEY) then
-          require("chatgpt").setup {
-          }
-        end
-      end, 100)
-    end,
-  },
+ 	{
+		"github/copilot.vim",
+		event = "VeryLazy",
+		config = function()
+			-- copilot assume mapped
+			vim.g.copilot_assume_mapped = true
+			vim.g.copilot_no_tab_map = true
+		end,
+	},
+	{
+		"hrsh7th/cmp-copilot",
+		config = function()
+			lvim.builtin.cmp.formatting.source_names["copilot"] = "( )"
+			table.insert(lvim.builtin.cmp.sources, 2, { name = "copilot" })
+		end,
+	},
   ...
 }
-
--- Can not be placed into the config method of the plugins.
-lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
-table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 -- vim.api.nvim_create_autocmd("BufEnter", {
