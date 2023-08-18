@@ -9,6 +9,13 @@ fi
 #  source /usr/share/zsh/{{ .chezmoi.osRelease.id }}-zsh-prompt
 #fi
 
+if [[ -e $HOME/.asdf/asdf.sh ]]; then
+  source $HOME/.asdf/asdf.sh
+fi
+if [[ -e /opt/asdf-vm/asdf.sh ]]; then
+  source /opt/asdf-vm/asdf.sh
+fi
+
 eval "$(starship init zsh)"
 
 export ATUIN_NOBIND="true"
@@ -40,8 +47,6 @@ if [ -d /opt/microsoft/msedge ]; then
 else
   export CHROME_EXECUTABLE=/usr/sbin/chromium;
 fi
-
-. /opt/asdf-vm/asdf.sh
 
 # for scripts you don't want to keep synchronized
 if test -n "$(find $HOME/.config/zsh/ -maxdepth 1 -type f -name '*.zsh' -print -quit 2>/dev/null)"; then
