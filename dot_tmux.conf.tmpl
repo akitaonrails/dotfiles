@@ -13,6 +13,9 @@ set -g base-index 1
 set -g history-limit 100000
 set -sg repeat-time 600
 
+# mouse scroll will scroll window instead of shell history
+setw -g alternate-screen on
+
 # highlight window when it has new activity
 setw -g monitor-activity on
 set -g visual-activity on

@@ -175,6 +175,7 @@ lvim.builtin.treesitter.highlight.enable = true
 lvim.plugins = {
   { "machakann/vim-sandwich" },
   { "christoomey/vim-tmux-navigator" },
+  { "vim-crystal/vim-crystal" },
  	{
 		"github/copilot.vim",
 		event = "VeryLazy",

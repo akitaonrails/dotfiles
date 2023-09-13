@@ -33,7 +33,7 @@ export PATH=$PATH:$HOME/.npm-global/bin:$HOME/.local/bin:$(go env GOBIN):$(go en
 export OPENAI_API_KEY="{{ .openai.secretKey }}";
 export EDITOR="lvim";
 #export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
-export JAVA_HOME='/usr/lib/jvm/java-11-openjdk'
+#export JAVA_HOME='/usr/lib/jvm/java-11-openjdk'
 export ANDROID_SDK_ROOT='{{ .chezmoi.homeDir }}/Android/Sdk'
 if [ -d $ANDROID_SDK_ROOT ]; then
   export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools/;
@@ -47,6 +47,8 @@ if [ -d /opt/microsoft/msedge ]; then
 else
   export CHROME_EXECUTABLE=/usr/sbin/chromium;
 fi
+export CARGO_TARGET_DIR=/tmp/cargo
+mkdir -p /tmp/cargo 
 
 # for scripts you don't want to keep synchronized
 if test -n "$(find $HOME/.config/zsh/ -maxdepth 1 -type f -name '*.zsh' -print -quit 2>/dev/null)"; then
@@ -57,4 +59,20 @@ fi
 
 if [ -f /usr/bin/neofetch ]; then
   neofetch
+fi
+
+if [ -z "$TMUX" ]; then
+  if [[ $(tmux list-sessions) ]]; then
+    echo "Existing detected, attach? (y/n)"
+    read choice
+    if [[ "$choice" =~ ^(yes|y|Y)$ ]]; then
+      tmux attach-session -t 0
+    elif [[ "$choice" =~ ^(console|c|C)$ ]]; then
+      # do nothing
+    else
+      tmux new-session
+    fi
+  else
+    tmux new-session
+  fi
 fi
