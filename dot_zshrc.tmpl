@@ -34,14 +34,14 @@ export OPENAI_API_KEY="{{ .openai.secretKey }}";
 export EDITOR="lvim";
 #export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
 #export JAVA_HOME='/usr/lib/jvm/java-11-openjdk'
-export ANDROID_SDK_ROOT='{{ .chezmoi.homeDir }}/Android/Sdk'
-if [ -d $ANDROID_SDK_ROOT ]; then
-  export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools/;
-  export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin/;
-  export PATH=$PATH:$ANDROID_ROOT/emulator;
-  export PATH=$PATH:$ANDROID_SDK_ROOT/tools/;
-  export PATH=$PATH:/opt/flutter/bin;
-fi
+#export ANDROID_SDK_ROOT='{{ .chezmoi.homeDir }}/Android/Sdk'
+#if [ -d $ANDROID_SDK_ROOT ]; then
+#  export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools/;
+#  export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin/;
+#  export PATH=$PATH:$ANDROID_ROOT/emulator;
+#  export PATH=$PATH:$ANDROID_SDK_ROOT/tools/;
+#  export PATH=$PATH:/opt/flutter/bin;
+#fi
 if [ -d /opt/microsoft/msedge ]; then
   export CHROME_EXECUTABLE=/opt/microsoft/msedge/msedge;
 else
