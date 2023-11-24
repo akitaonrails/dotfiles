@@ -22,6 +22,9 @@ export ATUIN_NOBIND="true"
 eval "$(atuin init zsh)"
 bindkey '^r' _atuin_search_widget
 
+alias monhd="sudo ddcutil -d 1 setvcp 60 0x12"
+alias mondp="sudo ddcutil -d 1 setvcp 60 0x0F"
+
 alias cz='chezmoi'
 alias dk='docker'
 #alias docker='podman' # remove this is you don't want to obfuscate docker with podman
